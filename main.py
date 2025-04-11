@@ -32,7 +32,7 @@ def startBot(username, password, login_url, list_url, folder_path, total_pages):
     chrome_options = Options()
     # chrome_options.add_argument("--headless")  # Chạy trình duyệt ẩn
     chrome_options.add_argument("--no-sandbox")
-    service = Service("C:/Users/lenovo/Desktop/Test/Auto_Submit_CodePtit-main/Auto_Submit_CodePtit-main/chromedriver.exe") # Đường dẫn đến chromedriver.exe
+    service = Service("chromedriver.exe") # Đường dẫn đến chromedriver.exe
     
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.delete_all_cookies()         
@@ -56,7 +56,7 @@ def startBot(username, password, login_url, list_url, folder_path, total_pages):
         # Duyệt danh sách bài tập
         print("[*] Đang thu thập danh sách bài tập...")
         for page in range(1, total_pages + 1):
-            url = f"{list_url}"
+            url = f"{list_url}?page={page}"
             driver.get(url)
             time.sleep(2)
 
@@ -78,14 +78,14 @@ def startBot(username, password, login_url, list_url, folder_path, total_pages):
                         print(f"Chưa làm: {content}")
 
                         # Truy cập bài tập và nộp bài
-                        driver.get(f"{base_url}/{content}")
+                        driver.get(f"{list_url}/{content}")
                         time.sleep(2)
                         file_path = f"{folder_path}/{content} - {title}.cpp" #Thay đổi nếu là ngôn ngữ khác
                         submit_assignment(driver, content, file_path)
                 
 
     except Exception as e:
-        print(f"[-] Đã xảy ra lỗi: {e}")
+        # print(f"[-] Đã xảy ra lỗi: {e}")
         print("[*] Đã đóng trình duyệt.")
     finally:
         # Đóng trình duyệt
@@ -99,7 +99,6 @@ username = os.getenv("APP_USERNAME")
 password = os.getenv("APP_PASSWORD")
 login_url = os.getenv("LOGIN_URL")
 list_url = os.getenv("LIST_URL")
-base_url=os.getenv("BASE_URL")
 folder_path = os.getenv("FOLDER_PATH")
 total_pages = int(os.getenv("TOTAL_PAGES"))
 
